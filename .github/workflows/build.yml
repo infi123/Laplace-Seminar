@@ -12,12 +12,17 @@ jobs:
     steps:
       - name: Check out project
         uses: actions/checkout@v4
+      
       - name: Install TeX, media tools and Hebrew fonts
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            latexmk texlive-xetex texlive-latex-recommended texlive-latex-extra \
-            texlive-pictures texlive-lang-arabic fonts-freefont-ttf fonts-dejavu-core \
+            latexmk texlive-xetex \
+            texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-pictures texlive-lang-arabic \
+            fonts-freefont-ttf fonts-dejavu-core \
+            fonts-urw-base35 \
             ffmpeg poppler-utils
       - name: Set up Python
         uses: actions/setup-python@v5
