@@ -1,23 +1,31 @@
+
 % ==============================================================
 % סמינר בהתמרת לפלס | מצגת Beamer בעברית
 % Compiler: XeLaTeX | Beamer 16:9
-% Manim animations are separate MP4s. The PDF uses reliable keyframes.
+% Manim animations are separate MP4s.
 % ==============================================================
 \documentclass[aspectratio=169,11pt]{beamer}
-\usepackage{fontspec}
-\usepackage{polyglossia}
-\setdefaultlanguage{hebrew}
-\setotherlanguage{english}
-\newfontfamily\hebrewfont[Script=Hebrew]{FreeSans}
-\newfontfamily\hebrewfontsf[Script=Hebrew]{FreeSans}
-\newfontfamily\hebrewfonttt[Script=Hebrew]{FreeMono}
-\setsansfont{FreeSans}
+
+% Mathematical and graphics packages - load BEFORE polyglossia
 \usepackage{amsmath,amssymb,mathtools}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{hyperref}
+
+% Hebrew and English support
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+
+\newfontfamily\hebrewfont[Script=Hebrew]{FreeSans}
+\newfontfamily\hebrewfontsf[Script=Hebrew]{FreeSans}
+\newfontfamily\hebrewfonttt[Script=Hebrew]{FreeMono}
+\setsansfont{FreeSans}
+
 \usefonttheme{professionalfonts}
 \setbeamersize{text margin left=11mm,text margin right=11mm}
+
 
 % Colors
 \definecolor{night}{HTML}{0B1428}
