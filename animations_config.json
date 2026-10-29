@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "resolution": [1134, 638],
+  "fps": 12,
+  "duration_seconds": 5,
+  "animations": {
+    "euler_decay": {"engine": "native", "description": "Euler circle and damped oscillation side by side"},
+    "complex_modes": {"engine": "native", "description": "Points in the complex plane and exponential behavior"},
+    "time_shift": {"engine": "native", "description": "Delayed input, labeled axes and delay arrow"},
+    "dirac_pulse": {"engine": "native", "description": "Unit-area pulse sequence approximating a delta"},
+    "convolution": {"engine": "native", "description": "Overlap of two pulses, output convolution"},
+    "system_response": {"engine": "native", "description": "Input, impulse response and output"}
+  }
+}

@@ -1,0 +1,12 @@
+מערכת בנייה אוטומטית — התמרת לפלס
+
+1) להציג עכשיו: פתח את dist/index.html ב-Chrome או Edge.
+2) לערוך שקפים: פתח main.tex ב-Overleaf (XeLaTeX).
+3) לעדכן HTML: העבר את השינויים ל-GitHub ועשה Push; Actions מפיק קובץ חדש.
+   לחלופין במחשב: python build_all.py
+4) הקבצים העדכניים: dist/index.html ו-dist/presentation.pdf
+5) קוד האנימציות: tools/native_animations.py; מיפוי: animations_config.json
+6) Manim המקורי עדיין בתיקיית manim; הסרטונים המוכנים משתמשים במנוע
+   Python/Pillow ששומר את כל המקראים והנוסחאות כחלק מהסרטון.
+
+הוראות מלאות: README_HE.md

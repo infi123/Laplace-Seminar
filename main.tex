@@ -1,0 +1,375 @@
+% ==============================================================
+% סמינר בהתמרת לפלס | מצגת Beamer בעברית
+% Compiler: XeLaTeX | Beamer 16:9
+% Manim animations are separate MP4s. The PDF uses reliable keyframes.
+% ==============================================================
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+\newfontfamily\hebrewfont[Script=Hebrew]{FreeSans}
+\newfontfamily\hebrewfontsf[Script=Hebrew]{FreeSans}
+\newfontfamily\hebrewfonttt[Script=Hebrew]{FreeMono}
+\setsansfont{FreeSans}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usefonttheme{professionalfonts}
+\setbeamersize{text margin left=11mm,text margin right=11mm}
+
+% Colors
+\definecolor{night}{HTML}{0B1428}
+\definecolor{panel}{HTML}{14223C}
+\definecolor{lighttext}{HTML}{F1F6FC}
+\definecolor{mutedtext}{HTML}{B6C5D8}
+\definecolor{cyan}{HTML}{41C9E8}
+\definecolor{gold}{HTML}{FFCD66}
+\definecolor{rose}{HTML}{FB7185}
+\definecolor{mint}{HTML}{7BDCB5}
+\setbeamercolor{normal text}{fg=lighttext,bg=night}
+\setbeamercolor{structure}{fg=cyan}
+\setbeamercolor{alerted text}{fg=gold}
+\setbeamercolor{frametitle}{fg=lighttext,bg=night}
+\setbeamercolor{block title}{fg=night,bg=cyan}
+\setbeamercolor{block body}{fg=lighttext,bg=panel}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}{\textcolor{cyan}{\small$\blacktriangleright$}}
+\setbeamertemplate{itemize subitem}{\textcolor{gold}{\scriptsize$\bullet$}}
+\setbeamertemplate{frametitle}{%
+\vspace{2mm}\begin{flushright}{\Large\bfseries\insertframetitle}\end{flushright}%
+\vspace{-2.7mm}\textcolor{cyan}{\rule{\linewidth}{0.7pt}}\vspace{0.8mm}}
+\setbeamertemplate{footline}{%
+  \hspace{7mm}{\tiny\color{mutedtext}סמינר: התמרת לפלס}\hfill
+  {\tiny\color{mutedtext}\insertframenumber}\hspace{7mm}\vspace{3mm}}
+\setlength{\parskip}{5pt}
+\newcommand{\Lap}{\mathcal{L}}
+\newcommand{\Real}{\operatorname{Re}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\highlight}[1]{{\color{gold}#1}}
+\newcommand{\bigformula}[1]{\vspace{2mm}\begin{center}{\LARGE\color{cyan}\(\displaystyle #1\)}\end{center}\vspace{2mm}}
+\newcommand{\visualframe}[3]{%
+\begin{frame}{#1}
+\begin{center}
+\includegraphics[width=.96\linewidth,height=.74\textheight,keepaspectratio]{assets/#2}
+\end{center}
+\vspace{-1mm}\begin{center}{\small\color{mutedtext}#3}\end{center}
+\end{frame}}
+\newcommand{\twoline}[2]{\begin{block}{#1}\vspace{1mm}#2\vspace{1mm}\end{block}}
+\newenvironment{spaceditems}{\begin{itemize}\setlength{\itemsep}{8pt}}{\end{itemize}}
+
+\title{התמרת לפלס: מן האקספוננט לפתרון בעיות התחלה}
+\subtitle{הגדרה, משפטים, הוכחות ויישומים}
+\author{רועי אוחנה}
+\date{2026}
+
+\begin{document}
+
+% 01
+\begin{frame}[plain]
+\begin{center}
+\vspace{16mm}
+{\color{cyan}\rule{.26\linewidth}{1.2pt}}\\[7mm]
+{\Huge\bfseries התמרת לפלס}\\[4mm]
+{\Large מן האקספוננט לפתרון בעיות התחלה}\\[10mm]
+{\large\color{mutedtext}סמינר במתמטיקה \quad | \quad רועי אוחנה}\\[13mm]
+{\color{gold}\LARGE $\displaystyle F(s)=\int_0^\infty e^{-st}f(t)\dd t$}
+\end{center}
+\end{frame}
+
+% 02
+\begin{frame}{מפת הדרך להרצאה}
+\begin{spaceditems}
+\item \highlight{מוטיבציה:} מדוע האקספוננט הוא רכיב טבעי של משוואות דיפרנציאליות?
+\item \highlight{יסודות:} הגדרת ההתמרה, התכנסות ותכונות מרכזיות
+\item \highlight{הכלי המרכזי:} המרת משוואות דיפרנציאליות למשוואות אלגבריות
+\item \highlight{קלטים מיוחדים:} השהיה בזמן ודלתא של דיראק
+\item \highlight{מערכות לינאריות:} קונבולוציה, תגובת אימפולס ומצב מתמיד
+\end{spaceditems}
+\vspace{6mm}
+\begin{center}{\color{cyan}פונקציה בזמן $\longleftarrow$ ייצוג בתחום $s$ $\longleftarrow$ פתרון וחזרה לזמן}\end{center}
+\end{frame}
+
+% 03
+\begin{frame}{המוטיבציה: האקספוננט תחת גזירה}
+\begin{spaceditems}
+\item הפונקציה האקספוננציאלית שומרת על צורתה גם לאחר גזירה
+\item לכן היא מועמדת טבעית לפתרון משוואות לינאריות עם מקדמים קבועים
+\end{spaceditems}
+\bigformula{\frac{\mathrm d^n}{\mathrm dt^n} e^{st}=s^n e^{st}}
+למשל, אם $ay''+by'+cy=0$ וננסה $y(t)=e^{st}$, נקבל
+\bigformula{as^2+bs+c=0}
+\begin{center}{\small\color{mutedtext}המשוואה הדיפרנציאלית הוחלפה במשוואה אלגברית.}\end{center}
+\end{frame}
+
+% 04
+\visualframe{המחשה: נגזרת האקספוננט}{01_exponential.png}{המשיק משתנה בהתאם לגובה הגרף; ההמחשה מלווה גם בסרטון אנימציה.}
+
+% 05
+\begin{frame}{האקספוננט המרוכב ונוסחת אוילר}
+\bigformula{s=\sigma+i\omega}
+\bigformula{e^{st}=e^{\sigma t}(\cos\omega t+i\sin\omega t)}
+\begin{spaceditems}
+\item החלק הממשי $\sigma$ קובע גדילה או דעיכה אקספוננציאלית
+\item החלק המדומה $\omega$ קובע תדירות תנודה
+\item צירוף של מצבים כאלה מסביר מגוון תופעות דינמיות
+\end{spaceditems}
+\end{frame}
+
+% 06
+% ANIM: euler_decay
+\visualframe{המחשה: סיבוב ודעיכה}{02_euler.png}{נוסחת אוילר מתארת סיבוב; הכפלה באקספוננט ממשי מתארת דעיכה או גדילה.}
+
+% 07
+\begin{frame}{מצבים אקספוננציאליים במישור המרוכב}
+אפשר לפרש פתרונות של מערכות לינאריות כצירוף של מצבים:
+\bigformula{x(t)=\sum_{k=1}^{n}c_k e^{s_k t}}
+\begin{spaceditems}
+\item לכל מספר $s_k$ יש חלק ממשי וחלק מדומה
+\item מיקום $s_k$ במישור מתאר את קצב הדעיכה ואת תדירות התנודה
+\item זהו מניע רעיוני להתמרת לפלס; ההתמרה עצמה אינה סתם פירוק לסכום אקספוננטים
+\end{spaceditems}
+\end{frame}
+
+% 08
+% ANIM: complex_modes
+\visualframe{המחשה: מיקום במישור $s$}{03_modes.png}{מיקום הנקודות במישור מרוכב משנה את ההתנהגות בזמן.}
+
+% 09
+\begin{frame}{הגדרת התמרת לפלס}
+\begin{block}{הגדרה}
+בהינתן פונקציה $f:[0,\infty)\to\mathbb C$, נגדיר את התמרת לפלס החד־צדדית שלה בכל נקודה שבה האינטגרל מתכנס:
+\end{block}
+\bigformula{F(s)=\Lap\{f\}(s)=\int_0^\infty e^{-st}f(t)\dd t}
+\begin{spaceditems}
+\item $t$ הוא המשתנה המקורי; $s$ הוא משתנה מרוכב חדש
+\item הגורם $e^{-st}$ משקלל את התרומה של $f$ לאורך הזמן
+\item ההתמרה מוגדרת רק בתחום ההתכנסות של האינטגרל
+\end{spaceditems}
+\end{frame}
+
+% 10
+\visualframe{המחשה: שקלול הפונקציה באקספוננט}{04_weighted.png}{האינטגרל אוסף את התרומות המשוקללות של האות על פני הזמן.}
+
+% 11
+\begin{frame}{מתי התמרת לפלס קיימת?}
+\begin{block}{סדר אקספוננציאלי}
+אם קיימים $M>0$, $\alpha\in\mathbb R$ ו־$t_0\ge0$ כך שלכל $t\ge t_0$ מתקיים
+\[|f(t)|\le Me^{\alpha t},\]
+נאמר שלפונקציה יש סדר אקספוננציאלי $\alpha$.
+\end{block}
+\begin{block}{משפט קיום — תנאי מספיק}
+אם $f$ רציפה למקוטעין על כל קטע סופי והיא מסדר אקספוננציאלי $\alpha$, אז
+\[\highlight{\Lap\{f\}(s)\ \text{קיימת כאשר}\ \Real(s)>\alpha}.\]
+\end{block}
+\vspace{2mm}
+{\small הרעיון בהוכחה: השוואת $|e^{-st}f(t)|$ ל־$Me^{-(\Real(s)-\alpha)t}$.}
+\end{frame}
+
+% 12
+\visualframe{המחשה: תנאי הגדילה}{05_growth.png}{פונקציה כמו $e^{t^2}$ גדלה מהר יותר מכל $e^{\alpha t}$ עבור $\alpha$ קבוע.}
+
+% 13
+\begin{frame}{התמרות בסיסיות ולינאריות}
+\begin{block}{זוגות התמרה שימושיים}
+\begin{align*}
+\Lap\{1\}&=\frac1s & \Lap\{\sin(\omega t)\}&=\frac{\omega}{s^2+\omega^2}\\[2mm]
+\Lap\{e^{at}\}&=\frac1{s-a} & \Lap\{\cos(\omega t)\}&=\frac{s}{s^2+\omega^2}\\[2mm]
+\Lap\{t^n\}&=\frac{n!}{s^{n+1}} &&
+\end{align*}
+\end{block}
+\vspace{5mm}
+\begin{center}{\large\color{gold}$\displaystyle\Lap\{af+bg\}=a\Lap\{f\}+b\Lap\{g\}$}\end{center}
+\begin{center}{\small\color{mutedtext}כל זה בתחום שבו ההתמרות מתכנסות.}\end{center}
+\end{frame}
+
+% 14
+\begin{frame}{משפט ההזזה הראשון}
+\bigformula{\Lap\{e^{at}f(t)\}(s)=F(s-a)}
+\begin{block}{רעיון ההוכחה}
+\begin{align*}
+\Lap\{e^{at}f(t)\}(s)
+&=\int_0^\infty e^{-st}e^{at}f(t)\dd t\\
+&=\int_0^\infty e^{-(s-a)t}f(t)\dd t\\
+&=F(s-a).
+\end{align*}
+\end{block}
+\begin{center}{\small\color{mutedtext}כפל באקספוננט בזמן פירושו הזזה ב־$s$.}\end{center}
+\end{frame}
+
+% 15
+\visualframe{המחשה: הזזה במישור ההתמרה}{06_shift_s.png}{הכפלה ב־$e^{at}$ מזיזה את מבנה ההתמרה ב־$a$ לאורך החלק הממשי.}
+
+% 16
+\begin{frame}{למה נגזרות הופכות לביטויים אלגבריים?}
+\bigformula{\Lap\{f'(t)\}=sF(s)-f(0)}
+\begin{block}{הוכחה באינטגרציה בחלקים}
+\begin{align*}
+\int_0^\infty e^{-st}f'(t)\dd t
+&=\left[e^{-st}f(t)\right]_0^\infty
++s\int_0^\infty e^{-st}f(t)\dd t\\
+&=sF(s)-f(0).
+\end{align*}
+\end{block}
+עבור נגזרת שנייה מתקבל
+\[\highlight{\Lap\{f''(t)\}=s^2F(s)-sf(0)-f'(0)}.\]
+\end{frame}
+
+% 17
+\begin{frame}{התמרת לפלס הפוכה ושברים חלקיים}
+המטרה כעת היא לחזור מפונקציה של $s$ אל הפונקציה המקורית בזמן.
+\[\frac{1}{(s-2)(s-3)}=-\frac{1}{s-2}+\frac{1}{s-3}\]
+\bigformula{\Lap^{-1}\!\left\{\frac{1}{(s-2)(s-3)}\right\}
+=-e^{2t}+e^{3t}}
+\begin{spaceditems}
+\item מפרקים פונקציה רציונלית לשברים חלקיים
+\item משתמשים בזוגות ההתמרה הידועים, כולל משפטי ההזזה
+\item תנאי הקיום והיחידות רלוונטיים כאשר מזהים את ההתמרה ההפוכה
+\end{spaceditems}
+\end{frame}
+
+% 18
+\begin{frame}{יישום ראשון: פתרון בעיית התחלה}
+נפתור את המשוואה
+\[y''+3y'+2y=0,\qquad y(0)=1,\quad y'(0)=0.\]
+נסמן $Y(s)=\Lap\{y\}$. על פי נוסחאות הגזירה:
+\begin{align*}
+(s^2Y-s)+3(sY-1)+2Y&=0\\[1mm]
+Y(s)&=\frac{s+3}{(s+1)(s+2)}\\
+&=\frac{2}{s+1}-\frac{1}{s+2}.
+\end{align*}
+\bigformula{y(t)=2e^{-t}-e^{-2t}}
+\end{frame}
+
+% 19
+\visualframe{המחשה: הפתרון בזמן}{07_ode.png}{הפתרון מקיים את תנאי ההתחלה ומתכנס ל־0 כאשר $t\to\infty$.}
+
+% 20
+\begin{frame}{קלט המופעל באיחור: משפט ההזזה השני}
+נסמן את פונקציית המדרגה בזמן $a>0$ ב־$u_a(t)$:
+\[u_a(t)=\begin{cases}0,&t<a,\\1,&t\ge a.\end{cases}\]
+\bigformula{\Lap\{u_a(t)f(t-a)\}=e^{-as}F(s)}
+\begin{block}{הוכחה קצרה}
+מבצעים באינטגרל את שינוי המשתנה $\tau=t-a$:
+\[\int_a^\infty e^{-st}f(t-a)\dd t
+=e^{-as}\int_0^\infty e^{-s\tau}f(\tau)\dd\tau.\]
+\end{block}
+\end{frame}
+
+% 21
+% ANIM: time_shift
+\visualframe{המחשה: אות מושהה בזמן}{08_time_shift.png}{האות נשאר כבוי עד זמן $a$, ואז מתחיל להתפתח כאילו הזמן אופס.}
+
+% 22
+\begin{frame}{דלתא של דיראק: מודל לאימפולס}
+\begin{spaceditems}
+\item כוח גדול שפועל זמן קצר יכול לתת שינוי תנע סופי
+\item דלתא מתארת באופן אידיאלי אירוע מרוכז בזמן יחיד
+\end{spaceditems}
+\[\int_{-\infty}^\infty f(t)\delta(t-a)\dd t=f(a)\]
+\bigformula{\Lap\{\delta(t-a)\}=e^{-as}\qquad(a>0)}
+\begin{block}{דיוק מתמטי}
+דלתא אינה פונקציה רגילה: אפשר להגדירה כהתפלגות, או לפרש אינטגרלים מתאימים באמצעות רימן–שטילטייס.
+\end{block}
+\end{frame}
+
+% 23
+% ANIM: dirac_pulse
+\visualframe{המחשה: פולס צר כמקורב לדלתא}{09_dirac.png}{הרוחב קטן, הגובה גדל, אך השטח נשאר 1.}
+
+% 24
+\begin{frame}{דוגמה פיזיקלית: אימפולס ותנועה בגז צמיג}
+קליע שמסתו $m$ מקבל אימפולס של תנע $mv_0$ ואז נע בתווך צמיג:
+\[mx''(t)+kx'(t)=mv_0\delta(t).\]
+נשתמש בקונבנציה החד־צדדית הסיבתית עם מצב מנוחה לפני האימפולס:
+\[X(s)=\frac{v_0}{s(s+k/m)}.\]
+\bigformula{x(t)=\frac{mv_0}{k}\left(1-e^{-kt/m}\right)}
+\[x'(t)=v_0e^{-kt/m}\qquad (t>0).\]
+\begin{center}{\small\color{mutedtext}האימפולס יוצר קפיצה מיידית במהירות; לאחר מכן ההתנגדות מאטה את הקליע.}\end{center}
+\end{frame}
+
+% 25
+\visualframe{המחשה: מהירות ומיקום אחרי אימפולס}{10_impulse_motion.png}{המהירות דועכת, בעוד המיקום מתקרב לערך סופי.}
+
+% 26
+\begin{frame}{קונבולוציה ומשפט הקונבולוציה}
+\begin{block}{הגדרה}
+\[(f*g)(t)=\int_0^t f(\tau)g(t-\tau)\dd\tau.\]
+\end{block}
+\bigformula{\Lap\{f*g\}(s)=F(s)G(s)}
+\begin{block}{רעיון ההוכחה}
+\[F(s)G(s)=\int_0^\infty\!\int_0^\infty
+ e^{-s(u+v)}f(u)g(v)\dd u\dd v.\]
+בהנחות המאפשרות שינוי סדר אינטגרציה, מציבים $t=u+v$ ומתקבלת התמרת הקונבולוציה.
+\end{block}
+\end{frame}
+
+% 27
+% ANIM: convolution
+\visualframe{המחשה: קונבולוציה כשטח חפיפה}{11_convolution.png}{כאשר אחת הפונקציות מחליקה, שטח החפיפה קובע את ערך הקונבולוציה.}
+
+% 28
+\begin{frame}{מתגובה לאימפולס לתגובה לקלט כללי}
+במערכת לינארית ואינווריאנטית בזמן, בעלת תגובת אימפולס $h(t)$:
+\bigformula{y(t)=(x*h)(t)}
+ובתחום לפלס מתקיים
+\bigformula{Y(s)=X(s)H(s)}
+\begin{spaceditems}
+\item תגובת אימפולס אחת מאפשרת לחשב תגובות לקלטים אחרים
+\item זהו הקשר בין משפט הקונבולוציה לתורת המערכות
+\item למשל, אם $h(t)=e^{-t}u_0(t)$ ו־$x(t)=u_1(t)$ אז
+\end{spaceditems}
+\[y(t)=u_1(t)\bigl(1-e^{-(t-1)}\bigr).\]
+\end{frame}
+
+% 29
+% ANIM: system_response
+\visualframe{המחשה: קלט, תגובת אימפולס ופלט}{12_system.png}{הפלט אינו זהה לקלט: הוא תוצאה של צבירת תגובת המערכת לאורך הזמן.}
+
+% 30
+\begin{frame}{התנהגות ארוכת טווח ומצב מתמיד}
+כדוגמה נבחן מערכת מסדר ראשון:
+\[y'(t)+y(t)=\sin t,\qquad y(0)=0.\]
+פתרונה הוא
+\bigformula{y(t)=\underbrace{\tfrac12 e^{-t}}_{\text{חולף}}
++\underbrace{\tfrac12(\sin t-\cos t)}_{\text{מתמיד}}}
+\begin{spaceditems}
+\item הרכיב החולף דועך עם הזמן
+\item הרכיב המתמיד ממשיך לתנוד בתדירות הכוח החיצוני
+\item תחום $s$ מסייע להבחין בין תרומות מסוגים שונים לפתרון
+\end{spaceditems}
+\end{frame}
+
+% 31
+\visualframe{המחשה: תגובה חולפת ותגובה מתמידה}{13_steady.png}{לאחר שהרכיב החולף נחלש, ההתנהגות נשלטת על ידי התגובה המתמידה.}
+
+% 32
+\begin{frame}{סיכום: מה למדנו על התמרת לפלס?}
+\begin{spaceditems}
+\item \highlight{הגדרה:} אינטגרל משוקלל שמעביר פונקציות לתחום מרוכב
+\item \highlight{תנאי קיום:} רציפות למקוטעין וסדר אקספוננציאלי מספיקים בחצי מישור מתאים
+\item \highlight{פישוט:} נגזרות והזזות מקבלות ייצוג אלגברי
+\item \highlight{יישומים:} פתרון בעיות התחלה, קלט מושהה, אימפולסים וקונבולוציה
+\item \highlight{רעיון מאחד:} חקר דינמיקה באמצעות התנהגותם של אקספוננטים
+\end{spaceditems}
+\vspace{6mm}
+\begin{center}{\Large\color{cyan}משוואות דיפרנציאליות $\longrightarrow$ אלגברה בתחום $s$}\end{center}
+\end{frame}
+
+% 33
+\begin{frame}{מקורות ותודה}
+\begin{itemize}
+\setlength{\itemsep}{10pt}
+\item \textenglish{Joel L. Schiff}, \textenglish{The Laplace Transform: Theory and Applications}, Springer
+\item \textenglish{3Blue1Brown}, סרטוני ההסבר על אקספוננטים מרוכבים והתמרת לפלס — השראה רעיונית להמחשות
+\item ההמחשות והסרטונים המצורפים נבנו כתוצרים מקוריים של הפרויקט
+\end{itemize}
+\vspace{9mm}
+\begin{center}
+{\Huge\color{cyan}תודה על ההקשבה}\\[4mm]
+{\LARGE\color{gold}שאלות?}
+\end{center}
+\end{frame}
+
+\end{document}

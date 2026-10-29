@@ -1,0 +1,86 @@
+name: Build Laplace seminar
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+      - name: Install TeX, media tools and Hebrew fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            latexmk texlive-xetex texlive-latex-recommended texlive-latex-extra \
+            texlive-pictures texlive-lang-arabic fonts-freefont-ttf fonts-dejavu-core \
+            ffmpeg poppler-utils
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+      - name: Install optional Manim renderer if selected
+        run: |
+          if python -c 'import json,sys; c=json.load(open("animations_config.json")); sys.exit(0 if any(v.get("engine")=="manim" for v in c["animations"].values()) else 1)'; then
+            sudo apt-get install -y --no-install-recommends libcairo2-dev libpango1.0-dev pkg-config
+            pip install manim
+          fi
+      - name: Restore rendered-video cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build/animations.json
+            .build/slides.sha256
+            .build/tex
+            dist/viewer/videos
+            dist/viewer/slides
+          key: laplace-${{ runner.os }}-${{ hashFiles('main.tex','assets/**','animations_config.json','tools/**') }}
+          restore-keys: |
+            laplace-${{ runner.os }}-
+      - name: Validate and build
+        run: |
+          python -m unittest discover -s tests -v
+          python build_all.py
+      - name: Upload ready-to-present files
+        uses: actions/upload-artifact@v4
+        with:
+          name: laplace-seminar-ready
+          path: |
+            dist/presentation.pdf
+            dist/index.html
+            dist/viewer/
+          retention-days: 30
+          if-no-files-found: error
+  publish:
+    # Optional GitHub Pages: enable repository variable ENABLE_PAGES=true
+    needs: build
+    if: ${{ vars.ENABLE_PAGES == 'true' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download ready presentation
+        uses: actions/download-artifact@v4
+        with:
+          name: laplace-seminar-ready
+          path: site
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload Pages site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
